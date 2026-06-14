@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio de Nelson KUADJO, Développeur Web &amp; Technicien en Informatique Industrielle et Maintenance. Découvrez mes projets, compétences et parcours technique.">
+  <title>Nelson KUADJO — Développeur Web &amp; Technicien en Informatique Industrielle et Maintenance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet">
+  <script>
+    // Prevent flash of dark/light theme
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --bg2: #fcfcfc;
+      --accent: #af944d;
+      /* Gold */
+      --accent-text: #8c7333; /* Darker gold for light theme accessibility */
+      --cyan: #00f5ff;
+      --green: #39ff14;
+      --text: #1a1a1a;
+      --text-dim: #717171;
+      --card-bg: #ffffff;
+      --card-border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+      --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.08);
+      --glow: 0 0 20px rgba(0, 245, 255, 0.3);
+      --bg-grad-start: #ffffff;
+      --bg-grad-end: #f9f9f9;
+      --nav-bg: rgba(255, 255, 255, 0.8);
+      --btn-action-bg: #ffffff;
+      --hero-grad-end: #2d3436;
+
+      /* Button variables */
+      --btn-primary-bg: #1a1a1a;
+      --btn-primary-text: #ffffff;
+      --btn-primary-border: #1a1a1a;
+      --btn-primary-hover-bg: #af944d;
+      --btn-primary-hover-text: #ffffff;
+      --btn-primary-hover-border: #af944d;
+
+      --btn-outline-bg: transparent;
+      --btn-outline-text: #1a1a1a;
+      --btn-outline-border: #1a1a1a;
+      --btn-outline-hover-bg: #1a1a1a;
+      --btn-outline-hover-text: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0c0f17;
+      --bg2: #161c24;
+      --accent: #af944d;
+      --accent-text: #e5c158; /* Brighter gold for dark theme accessibility */
+      --cyan: #00f5ff;
+      --green: #39ff14;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --card-bg: #161c24;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --glow: 0 0 20px rgba(0, 245, 255, 0.15);
+      --bg-grad-start: #0f1219;
+      --bg-grad-end: #07090e;
+      --nav-bg: rgba(12, 15, 23, 0.85);
+      --btn-action-bg: #1f2833;
+      --hero-grad-end: #ffffff;
+
+      /* Button variables */
+      --btn-primary-bg: #af944d;
+      --btn-primary-text: #0c0f17;
+      --btn-primary-border: #af944d;
+      --btn-primary-hover-bg: #ffffff;
+      --btn-primary-hover-text: #0c0f17;
+      --btn-primary-hover-border: #ffffff;
+
+      --btn-outline-bg: transparent;
+      --btn-outline-text: #e2e8f0;
+      --btn-outline-border: #e2e8f0;
+      --btn-outline-hover-bg: #e2e8f0;
+      --btn-outline-hover-text: #0c0f17;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      transition: background-color 0.3s ease;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* CURSOR */
+    #cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform .1s, background .2s;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width .2s, height .2s;
+      opacity: 0.3;
+    }
+
+    /* SUBTLE TEXTURE BG */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(circle at 50% 50%, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+      pointer-events: none;
+      transition: background 0.3s ease;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      font-size: .88rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: .6rem 1.2rem;
+      border: 1px solid var(--card-border);
+      background: var(--bg2);
+      transition: all .3s;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+      transform: translateY(-2px);
+    }
+
+    .nav-status {
+      color: var(--text);
+      font-weight: 600;
+      font-size: .85rem;
+      transition: color 0.3s ease;
+    }
+
+    .status-dot {
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .5;
+        transform: scale(1.3)
+      }
+    }
+
+    /* GLOW FOLLOW */
+    .glow-accent {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 245, 255, .04) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: all .3s ease;
+    }
+
+    /* HERO */
+    #hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #canvas-hero {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      padding: 2rem;
+    }
+
+    .hero-eyebrow {
+      font-size: .8rem;
+      letter-spacing: .2em;
+      color: var(--accent-text);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+
+    .hero-title .line2 {
+      background: linear-gradient(135deg, var(--accent), var(--hero-grad-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      color: var(--text-dim);
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    /* HERO BUTTONS IMPROVED */
+    .hero-cta {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 3rem;
+    }
+
+    .btn {
+      position: relative;
+      padding: 1.2rem 2.8rem;
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all .4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border: 1px solid var(--btn-primary-border);
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--btn-primary-hover-bg);
+      transition: all .4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      z-index: -1;
+    }
+
+    .btn-primary:hover {
+      color: var(--btn-primary-hover-text);
+      border-color: var(--btn-primary-hover-border);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(175, 148, 77, 0.15);
+    }
+
+    .btn-primary:hover::after {
+      left: 0;
+    }
+
+    .btn-outline {
+      background: var(--btn-outline-bg);
+      color: var(--btn-outline-text);
+      border: 1px solid var(--btn-outline-border);
+    }
+
+    .btn-outline:hover {
+      background: var(--btn-outline-hover-bg);
+      color: var(--btn-outline-hover-text);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary,
+    .btn-outline {
+      z-index: 1;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      opacity: 0;
+      animation: fadeUp .8s 1.2s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--cyan), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        opacity: .3
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    .scroll-label {
+      font-size: .62rem;
+      letter-spacing: .2em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* SECTIONS */
+    section {
+      position: relative;
+      z-index: 2;
+      padding: 7rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .section-tag {
+      font-size: 1.15rem;
+      color: var(--accent-text);
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--card-border);
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    /* PHOTO */
+    .photo-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    /* Coin décoratifs */
+    .photo-wrapper::before,
+    .photo-wrapper::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: var(--cyan);
+      border-style: solid;
+      z-index: 2;
+    }
+
+    .photo-wrapper::before {
+      top: -6px;
+      left: -6px;
+      border-width: 2px 0 0 2px;
+    }
+
+    .photo-wrapper::after {
+      bottom: -6px;
+      right: -6px;
+      border-width: 0 2px 2px 0;
+    }
+
+    .photo-inner {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+    }
+
+    /* Image réelle — remplace le src par ton chemin */
+    .photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      filter: grayscale(20%) contrast(1.05);
+      transition: filter .4s;
+    }
+
+    .photo-wrapper:hover .photo-inner img {
+      filter: grayscale(0%) contrast(1.1);
+    }
+
+    /* Placeholder si pas encore d'image */
+    .photo-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .photo-placeholder-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px dashed rgba(0, 245, 255, .3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-placeholder-icon svg {
+      width: 36px;
+      height: 36px;
+      opacity: .4;
+    }
+
+    .photo-placeholder-text {
+      font-size: .72rem;
+      color: var(--text-dim);
+      letter-spacing: .1em;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .photo-placeholder-text span {
+      color: var(--cyan);
+      display: block;
+    }
+
+    /* Bande scan animée */
+    .photo-scan {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      z-index: 3;
+      background: linear-gradient(to right, transparent, rgba(0, 245, 255, .6), transparent);
+      animation: photoScan 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes photoScan {
+      0% {
+        top: 0%
+      }
+
+      100% {
+        top: 100%
+      }
+    }
+
+    /* Overlay gradient bas */
+    .photo-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(to top, rgba(5, 8, 16, .7), transparent);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Badge nom sur la photo */
+    .photo-badge {
+      position: absolute;
+      bottom: 1.2rem;
+      left: 1.2rem;
+      z-index: 4;
+    }
+
+    .photo-badge-name {
+      font-family: 'Orbitron', monospace;
+      font-size: .85rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .08em;
+      line-height: 1.2;
+    }
+
+    .photo-badge-role {
+      font-size: .65rem;
+      color: var(--cyan);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-top: .2rem;
+    }
+
+    /* Stats */
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .8rem;
+      margin-top: 1.8rem;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card::before {
+      background: var(--accent);
+    }
+
+    .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: .75rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    /* Texte about */
+    .about-text p {
+      color: var(--text);
+      line-height: 1.8;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text .highlight {
+      color: var(--accent-text);
+      font-weight: 600;
+    }
+
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: 1.5rem;
+    }
+
+    .tag {
+      font-size: .7rem;
+      padding: .4rem .9rem;
+      border: 1px solid var(--card-border);
+      color: var(--text-dim);
+      background: var(--bg2);
+      transition: all .3s;
+    }
+
+    .tag:hover {
+      border-color: var(--accent-text);
+      color: var(--accent-text);
+      background: var(--bg);
+    }
+
+    /* TIMELINE */
+    .timeline {
+      position: relative;
+      margin: 4rem 0;
+      padding-left: 2.5rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 9px;
+      top: 10px;
+      bottom: 10px;
+      width: 2px;
+      background: var(--card-border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2.5rem;
+      margin-left: 1px;
+      top: 24px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-dot {
+      background: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .timeline-dot::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      transition: background-color 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-dot::after {
+      background: var(--bg);
+    }
+
+    .timeline-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      border-radius: 4px;
+      padding: 2.2rem 2rem;
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s, border-color 0.4s;
+    }
+
+    .timeline-item:hover .timeline-content {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+
+    .timeline-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .timeline-date {
+      font-size: 0.78rem;
+      color: var(--accent-text);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .timeline-company {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .timeline-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.92rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    .timeline-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1.5rem;
+    }
+
+    .timeline-tag {
+      font-size: 0.65rem;
+      padding: 0.3rem 0.8rem;
+      background: var(--bg2);
+      border: 1px solid var(--card-border);
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .timeline-item:hover .timeline-tag {
+      border-color: rgba(175, 148, 77, 0.2);
+      color: var(--text);
+    }
+
+    /* PROJECTS REDESIGN */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s, border-color 0.4s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+
+    .project-image-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.8rem;
+    }
+
+    .project-img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      border-radius: 2px;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+      display: block;
+    }
+
+    .project-card:hover .project-img {
+      transform: scale(1.03);
+    }
+
+    .project-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.7);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 3;
+    }
+
+    .project-card:hover .project-image-overlay {
+      opacity: 1;
+    }
+
+    .project-action-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--btn-action-bg);
+      color: var(--text);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 0.5rem;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s, color 0.3s, box-shadow 0.3s;
+      transform: translateY(20px);
+      opacity: 0;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-action-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .project-card:hover .project-action-btn {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Stagger the buttons entry animation */
+    .project-card:hover .project-action-btn:nth-child(1) {
+      transition-delay: 0.05s;
+    }
+    .project-card:hover .project-action-btn:nth-child(2) {
+      transition-delay: 0.12s;
+    }
+
+    .project-action-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(175, 148, 77, 0.3);
+    }
+
+    .project-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 2;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 0.8rem;
+      border-radius: 2px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .status-visiter {
+      background: rgba(10, 10, 10, 0.85);
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+
+    .status-encours {
+      background: rgba(10, 10, 10, 0.85);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .project-info {
+      padding: 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .project-type {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-text);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .project-tag {
+      font-size: 0.65rem;
+      padding: 0.3rem 0.8rem;
+      background: var(--bg2);
+      border: 1px solid var(--card-border);
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .project-card:hover .project-tag {
+      border-color: rgba(175, 148, 77, 0.2);
+      color: var(--text);
+    }
+
+    .project-links {
+      display: flex;
+      gap: 1rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 1rem;
+    }
+
+    .project-link {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.3s;
+      font-weight: 500;
+    }
+
+    .project-link:hover {
+      color: var(--accent-text);
+    }
+
+    /* LIGHTBOX MODAL */
+    .lightbox {
+      position: fixed;
+      z-index: 10000;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(15px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .lightbox.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lightbox-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+      background: #111;
+    }
+
+    .lightbox-caption {
+      color: #ffffff;
+      margin-top: 1.2rem;
+      letter-spacing: 0.05em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 500;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 3rem;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 10002;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+    }
+
+    .lightbox-close:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 2.2rem;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.5;
+      transition: opacity 0.3s, background 0.3s, transform 0.3s, border-color 0.3s;
+      z-index: 10001;
+      user-select: none;
+    }
+
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .lightbox-prev {
+      left: 3rem;
+    }
+
+    .lightbox-next {
+      right: 3rem;
+    }
+
+    @media (max-width: 900px) {
+      .lightbox-prev,
+      .lightbox-next {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+      .lightbox-prev {
+        left: 1rem;
+      }
+      .lightbox-next {
+        right: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .lightbox-prev,
+      .lightbox-next {
+        display: none;
+      }
+      .lightbox-close {
+        top: 1rem;
+        right: 1rem;
+        font-size: 2.5rem;
+      }
+    }
+
+    /* CONTACT */
+    .contact-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-info p {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      text-decoration: none;
+      color: var(--text);
+      font-size: .82rem;
+      transition: all .3s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0, 245, 255, .05);
+    }
+
+    .contact-link-icon {
+      color: var(--cyan);
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .contact-link-label {
+      font-size: .62rem;
+      color: var(--text-dim);
+      display: block;
+      margin-bottom: .1rem;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: .65rem;
+      letter-spacing: .15em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .85rem;
+      padding: .9rem 1rem;
+      outline: none;
+      resize: none;
+      transition: border-color .3s, box-shadow .3s;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 1px rgba(0, 245, 255, .2);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+    }
+
+    .btn-submit {
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .8rem;
+      letter-spacing: .15em;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      transition: all .3s;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      background: var(--cyan);
+      transition: left .4s ease;
+      z-index: -1;
+    }
+
+    .btn-submit:hover {
+      color: var(--bg);
+    }
+
+    .btn-submit:hover::before {
+      left: 0;
+    }
+
+    .form-success {
+      display: none;
+      padding: 1.2rem;
+      background: rgba(57, 255, 20, .05);
+      border: 1px solid rgba(57, 255, 20, .3);
+      color: var(--green);
+      font-size: .82rem;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* LOADER */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: opacity .5s ease;
+    }
+
+    .loader-pct {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .loader-bar-wrap {
+      width: 150px;
+      height: 2px;
+      background: var(--card-border);
+    }
+
+    .loader-bar {
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .loader-text {
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      font-size: .65rem;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--card-border);
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .7rem;
+      color: var(--text-dim);
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-wrapper {
+        max-width: 260px;
+        margin: 0 auto;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-title {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 300px;
+        margin: 2.5rem auto 0;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 1rem 2rem;
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    /* CERTIFICATIONS SECTION */
+    .certifications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .cert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      border-radius: 4px;
+      padding: 2.2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s, border-color 0.4s;
+    }
+
+    .cert-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+
+    .cert-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.3s ease;
+    }
+
+    .cert-card:hover::before {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+
+    .cert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .cert-icon {
+      color: var(--accent);
+      width: 38px;
+      height: 38px;
+      background: rgba(175, 148, 77, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .cert-card:hover .cert-icon {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .cert-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .cert-date {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .cert-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+    }
+
+    .cert-issuer {
+      font-size: 0.82rem;
+      color: var(--accent-text);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .cert-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .cert-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cert-tag {
+      font-size: 0.65rem;
+      padding: 0.3rem 0.8rem;
+      background: var(--bg2);
+      border: 1px solid var(--card-border);
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .cert-link {
+      font-size: 0.72rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      transition: color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .cert-link:hover {
+      color: var(--accent-text);
+    }
+
+    /* THEME TOGGLE */
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-btn {
+      background: var(--bg2);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: relative;
+    }
+
+    .theme-btn:hover {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      transform: translateY(-2px);
+    }
+
+    .theme-btn svg {
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      transition: transform 0.5s ease, opacity 0.3s ease;
+    }
+
+    .theme-btn .sun-icon {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0);
+    }
+    .theme-btn .moon-icon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    [data-theme="dark"] .sun-icon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+    [data-theme="dark"] .moon-icon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0);
+    }
+
+    /* GLOBAL SCROLL REVEAL ANIMATIONS */
+    .timeline-item, .project-card, .stat-card, .cert-card {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .timeline-item.visible, .project-card.visible, .stat-card.visible, .cert-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-pct" id="loader-pct">0%</div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-bar"></div>
+    </div>
+    <div class="loader-text" id="loader-txt">// Initialisation...</div>
+  </div>
+
+  <!-- CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- GLOW MOUSE -->
+  <div class="glow-accent" id="glow-accent"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">NELSON<span>.</span>K</a>
+    <ul class="nav-links">
+      <li><a href="#about">// à propos</a></li>
+      <li><a href="#timeline">// parcours</a></li>
+      <li><a href="#projects">// projets</a></li>
+      <li><a href="#certifications">// certifications</a></li>
+      <li><a href="#contact">// contact</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button id="theme-toggle" class="theme-btn" aria-label="Changer de thème">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <div class="nav-status">
+        <div class="status-dot"></div>
+        <span>Disponible</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" style="max-width:none; padding:0;">
+    <canvas id="canvas-hero"></canvas>
+    <div class="hero-content">
+      <p class="hero-eyebrow">// Développeur Web &amp; Technicien en Informatique Industrielle et Maintenance · Bénin</p>
+      <h1 class="hero-title">
+        <span class="line1">Nelson</span>
+        <span class="line2">KUADJO</span>
+      </h1>
+      <p class="hero-subtitle">
+        J'allie développement web, électronique embarquée, programmation système et intelligence artificielle appliquée (AIAA) pour concevoir des solutions performantes et sur-mesure.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">Voir mes projets</a>
+        <a href="#contact" class="btn btn-outline">Me contacter</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <!-- <span class="scroll-label"></span> -->
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header">
+      <div class="section-tag">01 — À propos</div>
+      <h2 class="section-title">Qui je suis<br>&amp; mon profil.</h2>
+    </div>
+    <div class="about-grid">
+
+      <!-- PHOTO -->
+      <div>
+        <div class="photo-wrapper">
+          <div class="photo-inner">
+
+            <!--
+            ╔══════════════════════════════════════╗
+            ║  REMPLACE src="" PAR TON IMAGE       ║
+            ║  Exemple :                           ║
+            ║  src="photo.jpg"                     ║
+            ║  ou src="images/nelson.jpg"          ║
+            ╚══════════════════════════════════════╝
+          -->
+            <img src="me.png" alt="Nelson KUADJO" id="profile-photo" style="display:none;"
+              onload="this.style.display='block'; document.getElementById('placeholder').style.display='none';" />
+
+            <!-- Placeholder affiché tant qu'il n'y a pas de photo -->
+            <div class="photo-placeholder" id="placeholder">
+              <div class="photo-placeholder-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,245,255,0.5)" stroke-width="1.5">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+              </div>
+              <div class="photo-placeholder-text">
+                <span>Ta photo ici</span>
+                Remplace src="" dans le code<br>par le chemin de ton image
+              </div>
+            </div>
+
+            <div class="photo-scan"></div>
+            <div class="photo-overlay"></div>
+
+            <div class="photo-badge">
+              <div class="photo-badge-name">Nelson KUADJO</div>
+              <div class="photo-badge-role">Développeur Web &amp; Technicien en Informatique Industrielle et Maintenance</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats sous la photo -->
+        <div class="about-stats">
+          <div class="stat-card">
+            <div class="stat-value counter" data-target="3">0</div>
+            <div class="stat-label">Ans d'XP</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value counter" data-target="5">0</div>
+            <div class="stat-label">Projets livrés</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value counter" data-target="4">0</div>
+            <div class="stat-label">Clients satisfaits</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value counter" data-target="99">0</div>
+            <div class="stat-label">% Uptime</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEXTE -->
+      <div class="about-text">
+        <p>
+          Titulaire d'une <span class="highlight">Licence en Informatique Industrielle et Maintenance</span>, j'ai construit un parcours à la fois technique et pratique. J'évolue avec passion dans le développement web, l'électronique embarquée, la programmation système et la digitalisation par l'Intelligence Artificielle Appliquée (AIAA).
+        </p>
+        <p>
+          Aujourd'hui <span class="highlight">CTO de IAGΞNIX</span> (agence spécialisée en automatisation et solutions IA), j'intègre les outils d'IA au quotidien pour automatiser, optimiser et concevoir des solutions innovantes adaptées aux besoins réels.
+        </p>
+        <p>
+          Au-delà de l'ingénierie, je développe et commercialise des produits digitaux à forte valeur ajoutée, tout en menant des activités de commerce international avec la Chine, d'où j'importe des produits revendus au Bénin dans une logique entrepreneuriale axée sur la rentabilité et la création de valeur.
+        </p>
+        <div class="about-tags">
+          <span class="tag">React / Next.js</span>
+          <span class="tag">Python (IA)</span>
+          <span class="tag">Intelligence Artificielle (AIAA)</span>
+          <span class="tag">Automatisation &amp; APIs</span>
+          <span class="tag">Microcontrôleurs (ESP32, ATmega)</span>
+          <span class="tag">Arduino &amp; Assembleur</span>
+          <span class="tag">Électronique Embarquée</span>
+          <span class="tag">Maintenance Systèmes</span>
+          <span class="tag">Produits Digitaux</span>
+          <span class="tag">Docker / AWS</span>
+          <span class="tag">Commerce International</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TIMELINE -->
+  <section id="timeline">
+    <div class="section-header">
+      <div class="section-tag">02 — Parcours</div>
+      <h2 class="section-title">Chaque étape<br>a compté.</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-meta">
+            <span class="timeline-date">2026 — Présent</span>
+            <span class="timeline-company">// IAGΞNIX · Bénin</span>
+          </div>
+          <h3 class="timeline-title">CTO &amp; Co-fondateur</h3>
+          <p class="timeline-desc">Direction technique de notre agence spécialisée en automatisation de processus complexes et développement de solutions basées sur l'Intelligence Artificielle Appliquée (AIAA). Conception et lancement de produits digitaux à forte valeur ajoutée.</p>
+          <div class="timeline-tags">
+            <span class="timeline-tag">IA Générative</span>
+            <span class="timeline-tag">Automatisation (AIAA)</span>
+            <span class="timeline-tag">Solutions Cloud</span>
+            <span class="timeline-tag">Leadership</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-meta">
+            <span class="timeline-date">2025 — 2026</span>
+            <span class="timeline-company">// Indépendant &amp; Import-Export · Bénin</span>
+          </div>
+          <h3 class="timeline-title">Développeur Full-Stack &amp; Entrepreneur</h3>
+          <p class="timeline-desc">Conception d'applications web sur-mesure et déploiement de solutions cloud. Parallèlement, gestion d'activités d'importation de produits depuis la Chine pour distribution sur le marché béninois.</p>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Full-Stack Dev</span>
+            <span class="timeline-tag">Architecture Cloud</span>
+            <span class="timeline-tag">Logistique</span>
+            <span class="timeline-tag">E-Commerce</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-meta">
+            <span class="timeline-date">02/2025 — 05/2025</span>
+            <span class="timeline-company">// CIFIE · Parakou</span>
+          </div>
+          <h3 class="timeline-title">Stagiaire en Électronique Embarquée</h3>
+          <p class="timeline-desc">Réalisation de nombreux projets en électronique embarquée. Programmation de cartes Arduino (langage Arduino et C pour AVR), programmation en assembleur sur microcontrôleurs ATmega328P et maîtrise de l'ESP32. Acquisition de notions sur les FPGA et travaux de maintenance d'équipements électroniques.</p>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Arduino &amp; ESP32</span>
+            <span class="timeline-tag">C (AVR) &amp; Assembleur</span>
+            <span class="timeline-tag">Microcontrôleurs</span>
+            <span class="timeline-tag">Maintenance Électronique</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-meta">
+            <span class="timeline-date">2024 — 2025</span>
+            <span class="timeline-company">// CITECH · Bénin</span>
+          </div>
+          <h3 class="timeline-title">Stagiaire en Électronique Embarquée &amp; Programmation</h3>
+          <p class="timeline-desc">Réalisation de projets en électronique embarquée : programmation Arduino (Arduino/C pour AVR), assembleur (ATmega328P) et ESP32. Travaux de maintenance d'équipements électroniques, ainsi que développement d'applications mobiles et web.</p>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Arduino &amp; C++</span>
+            <span class="timeline-tag">ESP32 &amp; Assembleur</span>
+            <span class="timeline-tag">Développement Web</span>
+            <span class="timeline-tag">Maintenance</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-meta">
+            <span class="timeline-date">06/2023 — 09/2023</span>
+            <span class="timeline-company">// TCI-Bénin · Parakou</span>
+          </div>
+          <h3 class="timeline-title">Stagiaire Technique Polyvalent</h3>
+          <p class="timeline-desc">Montage et configuration d'antennes paraboliques. Installation et maintenance de systèmes électriques en bâtiment, installation et optimisation de systèmes solaires photovoltaïques, et configuration/maintenance d'infrastructures réseau.</p>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Réseau Informatique</span>
+            <span class="timeline-tag">Systèmes Solaires PV</span>
+            <span class="timeline-tag">Électricité Bâtiment</span>
+            <span class="timeline-tag">Télécom</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-meta">
+            <span class="timeline-date">2022 — 2025</span>
+            <span class="timeline-company">// HECM · Bénin</span>
+          </div>
+          <h3 class="timeline-title">Licence en Informatique Industrielle &amp; Maintenance</h3>
+          <p class="timeline-desc">Formation académique et technique approfondie : électronique embarquée, programmation (assembleur, microcontrôleurs, C/C++), automatique, maintenance informatique et réseaux.</p>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Informatique Industrielle</span>
+            <span class="timeline-tag">Électronique Embarquée</span>
+            <span class="timeline-tag">Automatique</span>
+            <span class="timeline-tag">Maintenance &amp; Réseaux</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-header">
+      <div class="section-tag">03 — Projets</div>
+      <h2 class="section-title">Ce que j'ai<br>construit.</h2>
+    </div>
+    <div class="projects-grid">
+
+      <!-- PROJET 1 : ReCa Beauty & Style -->
+      <div class="project-card">
+        <div class="project-image-container">
+          <img src="images/project_recabeauty.png" alt="ReCa Beauty & Style" class="project-img">
+          <div class="project-image-overlay">
+            <button class="project-action-btn btn-lightbox" data-index="0" title="Agrandir l'image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </button>
+            <a href="https://recabeauty.netlify.app" target="_blank" class="project-action-btn btn-link" title="Visiter le site">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+          <div class="project-badge status-visiter">Visiter</div>
+        </div>
+        <div class="project-info">
+          <div class="project-type">E-commerce · Cosmétique</div>
+          <h3 class="project-title">ReCa Beauty & Style</h3>
+          <p class="project-desc">Plateforme de vente en ligne sécurisée avec gestion dynamique du catalogue, panier d'achat fluide et protection contre les failles de sécurité XSS.</p>
+          <div class="project-stack">
+            <span class="project-tag">HTML5</span>
+            <span class="project-tag">CSS3</span>
+            <span class="project-tag">JavaScript</span>
+            <span class="project-tag">Security</span>
+          </div>
+          <div class="project-links">
+            <a href="https://recabeauty.netlify.app" target="_blank" class="project-link">⬡ Live Site</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJET 2 : Billetterie Conférence 2026 -->
+      <div class="project-card">
+        <div class="project-image-container">
+          <img src="images/project_conftick.png" alt="Billetterie Conférence 2026" class="project-img">
+          <div class="project-image-overlay">
+            <button class="project-action-btn btn-lightbox" data-index="1" title="Agrandir l'image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </button>
+            <a href="https://conftick.netlify.app" target="_blank" class="project-action-btn btn-link" title="Visiter le site">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+          <div class="project-badge status-visiter">Visiter</div>
+        </div>
+        <div class="project-info">
+          <div class="project-type">Automation · Event</div>
+          <h3 class="project-title">Billetterie Conférence 2026</h3>
+          <p class="project-desc">Système automatisé de génération de tickets QR uniques pour un événement au Bénin, incluant un outil de scan et de vérification web en temps réel.</p>
+          <div class="project-stack">
+            <span class="project-tag">Python</span>
+            <span class="project-tag">QR Code</span>
+            <span class="project-tag">JavaScript</span>
+            <span class="project-tag">Event Tech</span>
+          </div>
+          <div class="project-links">
+            <a href="https://conftick.netlify.app" target="_blank" class="project-link">⬡ Live Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJET 3 : Wildécor Event -->
+      <div class="project-card">
+        <div class="project-image-container">
+          <img src="images/project_wildecor.png" alt="Wildécor Event" class="project-img">
+          <div class="project-image-overlay">
+            <button class="project-action-btn btn-lightbox" data-index="2" title="Agrandir l'image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </button>
+            <a href="https://wildecor-event.vercel.app/" target="_blank" class="project-action-btn btn-link" title="Visiter le site">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+          <div class="project-badge status-visiter">Visiter</div>
+        </div>
+        <div class="project-info">
+          <div class="project-type">Event Planner · Vitrine</div>
+          <h3 class="project-title">Wildécor Event</h3>
+          <p class="project-desc">Plateforme vitrine immersive pour un spécialiste en décoration événementielle et mariages au Bénin, dotée d'animations fluides et d'un portfolio visuel.</p>
+          <div class="project-stack">
+            <span class="project-tag">React</span>
+            <span class="project-tag">Tailwind CSS</span>
+            <span class="project-tag">Framer Motion</span>
+            <span class="project-tag">Vite</span>
+          </div>
+          <div class="project-links">
+            <a href="https://wildecor-event.vercel.app/" target="_blank" class="project-link">⬡ Live Site</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJET 4 : Assounlé Délices -->
+      <div class="project-card">
+        <div class="project-image-container">
+          <img src="images/project_assounle.png" alt="Assounlé Délices" class="project-img">
+          <div class="project-image-overlay">
+            <button class="project-action-btn btn-lightbox" data-index="3" title="Agrandir l'image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </button>
+            <a href="https://assounle-delices.vercel.app/" target="_blank" class="project-action-btn btn-link" title="Visiter le site">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+          <div class="project-badge status-visiter">Visiter</div>
+        </div>
+        <div class="project-info">
+          <div class="project-type">Gastronomie · Traiteur</div>
+          <h3 class="project-title">Assounlé Délices</h3>
+          <p class="project-desc">Plateforme de restauration, formation en cuisine & pâtisserie et vente d'ustensiles au Bénin, gérée par une Cheffe certifiée. Commande et livraison.</p>
+          <div class="project-stack">
+            <span class="project-tag">React</span>
+            <span class="project-tag">Tailwind CSS</span>
+            <span class="project-tag">Framer Motion</span>
+            <span class="project-tag">E-Commerce</span>
+          </div>
+          <div class="project-links">
+            <a href="https://assounle-delices.vercel.app/" target="_blank" class="project-link">⬡ Live Site</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJET 5 : Structura BTP -->
+      <div class="project-card">
+        <div class="project-image-container">
+          <img src="images/project_structura.png" alt="Structura BTP" class="project-img">
+          <div class="project-image-overlay">
+            <button class="project-action-btn btn-lightbox" data-index="4" title="Agrandir l'image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            </button>
+            <a href="https://structura-btp.vercel.app/" target="_blank" class="project-action-btn btn-link" title="Visiter le site">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+          <div class="project-badge status-visiter">Visiter</div>
+        </div>
+        <div class="project-info">
+          <div class="project-type">BTP · Construction</div>
+          <h3 class="project-title">Structura BTP</h3>
+          <p class="project-desc">Site professionnel vitrine pour une entreprise de bâtiment et travaux publics au Bénin, présentant ses chantiers, réalisations et savoir-faire.</p>
+          <div class="project-stack">
+            <span class="project-tag">React</span>
+            <span class="project-tag">Tailwind CSS</span>
+            <span class="project-tag">Civil Eng.</span>
+            <span class="project-tag">Showcase</span>
+          </div>
+          <div class="project-links">
+            <a href="https://structura-btp.vercel.app/" target="_blank" class="project-link">⬡ Live Site</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="section-header">
+      <div class="section-tag">04 — Certifications</div>
+      <h2 class="section-title">Diplômes &amp;<br>Certifications</h2>
+    </div>
+    <div class="certifications-grid">
+      <!-- CERT 1 : Claude Platform 101 -->
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+            </svg>
+          </div>
+          <span class="cert-date">2026</span>
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">Claude Platform 101</h3>
+          <p class="cert-issuer">Anthropic Education</p>
+          <p class="cert-desc">Intégration de Claude dans des applications tierces via l'API d'Anthropic. Gestion des requêtes API, des tokens et des clés d'accès.</p>
+          <div class="cert-tags">
+            <span class="cert-tag">Anthropic API</span>
+            <span class="cert-tag">Claude Platform</span>
+          </div>
+        </div>
+        <div class="cert-footer">
+          <a href="https://verify.skilljar.com/c/bm6jpgwkj69z" target="_blank" class="cert-link">⬡ Vérifier la certification</a>
+        </div>
+      </div>
+
+      <!-- CERT 2 : Code Claude 101 -->
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          <span class="cert-date">2026</span>
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">Code Claude 101</h3>
+          <p class="cert-issuer">Anthropic Education</p>
+          <p class="cert-desc">Utilisation avancée de Claude pour le développement logiciel. Génération de code, refactoring, débogage et traduction de langages.</p>
+          <div class="cert-tags">
+            <span class="cert-tag">Coding</span>
+            <span class="cert-tag">Software Dev</span>
+          </div>
+        </div>
+        <div class="cert-footer">
+          <a href="https://verify.skilljar.com/c/hjfa5d4uwqn9" target="_blank" class="cert-link">⬡ Vérifier la certification</a>
+        </div>
+      </div>
+
+      <!-- CERT 3 : Claude 101 -->
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <span class="cert-date">2026</span>
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">Claude 101</h3>
+          <p class="cert-issuer">Anthropic Education</p>
+          <p class="cert-desc">Maîtrise des fondamentaux de l'interaction avec Claude. Conception de prompts structurés, gestion du contexte et personnalisation.</p>
+          <div class="cert-tags">
+            <span class="cert-tag">Prompt Engineering</span>
+            <span class="cert-tag">Claude Essentials</span>
+          </div>
+        </div>
+        <div class="cert-footer">
+          <a href="https://verify.skilljar.com/c/swrfyyowzud4" target="_blank" class="cert-link">⬡ Vérifier la certification</a>
+        </div>
+      </div>
+
+      <!-- CERT 4 : Maîtrise de l'IA pour les petites entreprises -->
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <span class="cert-date">2026</span>
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">Maîtrise de l'IA pour les PME</h3>
+          <p class="cert-issuer">Anthropic Education</p>
+          <p class="cert-desc">Application pratique de l'intelligence artificielle pour l'optimisation des processus d'affaires, l'automatisation et la productivité.</p>
+          <div class="cert-tags">
+            <span class="cert-tag">AI for Business</span>
+            <span class="cert-tag">PME / Startups</span>
+          </div>
+        </div>
+        <div class="cert-footer">
+          <a href="https://verify.skilljar.com/c/rmex57onomez" target="_blank" class="cert-link">⬡ Vérifier la certification</a>
+        </div>
+      </div>
+
+      <!-- CERT 5 : ICDL Profile -->
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5"/>
+            </svg>
+          </div>
+          <span class="cert-date">Mars 2023</span>
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">ICDL Profile</h3>
+          <p class="cert-issuer">ICDL Africa · ID : BJ6005326</p>
+          <p class="cert-desc">Profil officiel ICDL attestant de la maîtrise globale des compétences numériques certifiées par ICDL Africa.</p>
+          <div class="cert-tags">
+            <span class="cert-tag">ICDL</span>
+            <span class="cert-tag">ICDL Core</span>
+          </div>
+        </div>
+        <div class="cert-footer">
+          <a href="https://profile.icdlafrica.org/" target="_blank" class="cert-link">⬡ Vérifier la certification</a>
+        </div>
+      </div>
+
+      <!-- CERT 6 : ICDL Documents -->
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <span class="cert-date">Mars 2023</span>
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">ICDL Documents</h3>
+          <p class="cert-issuer">ICDL Africa · ID : BJ6005326</p>
+          <p class="cert-desc">Certification en traitement de texte (MS Office 2016) — maîtrise avancée de la création, mise en forme et gestion de documents professionnels.</p>
+          <div class="cert-tags">
+            <span class="cert-tag">ICDL</span>
+            <span class="cert-tag">MS Office</span>
+          </div>
+        </div>
+        <div class="cert-footer">
+          <a href="https://profile.icdlafrica.org/" target="_blank" class="cert-link">⬡ Vérifier la certification</a>
+        </div>
+      </div>
+
+      <!-- CERT 7 : ICDL Computer & Online Essentials -->
+      <div class="cert-card">
+        <div class="cert-header">
+          <div class="cert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <span class="cert-date">Mars 2023</span>
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">ICDL Computer &amp; Online Essentials</h3>
+          <p class="cert-issuer">ICDL Africa · ID : BJ6005326</p>
+          <p class="cert-desc">Certification en compétences informatiques essentielles (Win10 / Chrome) — maîtrise des fondamentaux de l'ordinateur et de la navigation en ligne.</p>
+          <div class="cert-tags">
+            <span class="cert-tag">ICDL</span>
+            <span class="cert-tag">Online Essentials</span>
+          </div>
+        </div>
+        <div class="cert-footer">
+          <a href="https://profile.icdlafrica.org/" target="_blank" class="cert-link">⬡ Vérifier la certification</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header">
+      <div class="section-tag">05 — Contact</div>
+      <h2 class="section-title">Connectons-<br>nous.</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Projet en tête ?</h3>
+        <p>Je suis disponible pour des missions freelance, des collaborations ou des postes à temps plein. N'hésitez pas
+          à m'écrire — je réponds sous 24h.</p>
+        <div class="contact-links">
+          <a href="mailto:dkuadjo@gmail.com" class="contact-link">
+            <span class="contact-link-icon">✉</span>
+            <div>
+              <span class="contact-link-label">Email</span>
+              dkuadjo@gmail.com
+            </div>
+          </a>
+          <a href="https://wa.me/2290156747349" target="_blank" class="contact-link">
+            <span class="contact-link-icon">☏</span>
+            <div>
+              <span class="contact-link-label">WhatsApp</span>
+              +229 01 56 74 73 49
+            </div>
+          </a>
+          <a href="https://github.com/Nel-200son" target="_blank" class="contact-link">
+            <span class="contact-link-icon">◈</span>
+            <div>
+              <span class="contact-link-label">GitHub</span>
+              @Nel-200son
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">NELSON KUADJO</div>
+
+    <div>© 2026 — All rights reserved</div>
+  </footer>
+
+  <script>
+    /* LOADER */
+    (function () {
+      const msgs = ['// Initialisation...', '// Chargement des assets...', '// Connexion établie...', '// Bienvenue.'];
+      const bar = document.getElementById('loader-bar');
+      const pct = document.getElementById('loader-pct');
+      const txt = document.getElementById('loader-txt');
+      let p = 0;
+      const iv = setInterval(() => {
+        p += Math.random() * 5 + 1;
+        if (p >= 100) { p = 100; clearInterval(iv); }
+        bar.style.width = p + '%';
+        pct.textContent = Math.floor(p) + '%';
+        txt.textContent = msgs[Math.min(Math.floor(p / 25), msgs.length - 1)];
+        if (p >= 100) {
+          setTimeout(() => {
+            const l = document.getElementById('loader');
+            l.style.opacity = '0';
+            setTimeout(() => l.style.display = 'none', 500);
+          }, 300);
+        }
+      }, 35);
+    })();
+
+    /* CURSOR */
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    const glowEl = document.getElementById('glow-accent');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+      glowEl.style.left = mx + 'px'; glowEl.style.top = my + 'px';
+    });
+    (function animRing() {
+      rx += (mx - rx) * .12; ry += (my - ry) * .12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+    document.querySelectorAll('a, button, .project-card').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.style.width = '60px'; ring.style.height = '60px'; cursor.style.transform = 'translate(-50%,-50%) scale(1.5)'; });
+      el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; cursor.style.transform = 'translate(-50%,-50%) scale(1)'; });
+    });
+
+    /* THREE.JS HERO */
+    try {
+      (function () {
+        const canvas = document.getElementById('canvas-hero');
+        if (!canvas) return;
+        if (typeof THREE === 'undefined') {
+          console.warn('Three.js is not loaded.');
+          return;
+        }
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 80;
+
+        const N = 3000;
+        const pos = new Float32Array(N * 3);
+        const col = new Float32Array(N * 3);
+        const sz = new Float32Array(N);
+        const cA = new THREE.Color('#00f5ff');
+        const cB = new THREE.Color('#39ff14');
+        for (let i = 0; i < N; i++) {
+          pos[i * 3] = (Math.random() - .5) * 200;
+          pos[i * 3 + 1] = (Math.random() - .5) * 200;
+          pos[i * 3 + 2] = (Math.random() - .5) * 200;
+          const c = cA.clone().lerp(cB, Math.random());
+          col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+          sz[i] = Math.random() * 2 + .5;
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+        geo.setAttribute('size', new THREE.BufferAttribute(sz, 1));
+        const mat = new THREE.PointsMaterial({ size: 1, vertexColors: true, transparent: true, opacity: .7, sizeAttenuation: true });
+        const particles = new THREE.Points(geo, mat);
+        scene.add(particles);
+
+        /* Lines */
+        const lpos = [], lcol = [], thr = 18;
+        for (let i = 0; i < 200; i++) {
+          for (let j = i + 1; j < 200; j++) {
+            const dx = pos[i * 3] - pos[j * 3], dy = pos[i * 3 + 1] - pos[j * 3 + 1], dz = pos[i * 3 + 2] - pos[j * 3 + 2];
+            const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (d < thr) { lpos.push(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2], pos[j * 3], pos[j * 3 + 1], pos[j * 3 + 2]); const a = 1 - d / thr; lcol.push(0, a * .8, a, 0, a * .8, a); }
+          }
+        }
+        const lgeo = new THREE.BufferGeometry();
+        lgeo.setAttribute('position', new THREE.Float32BufferAttribute(lpos, 3));
+        lgeo.setAttribute('color', new THREE.Float32BufferAttribute(lcol, 3));
+        scene.add(new THREE.LineSegments(lgeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: .25 })));
+
+        let tx = 0, ty = 0;
+        document.addEventListener('mousemove', e => { tx = (e.clientX / window.innerWidth - .5) * .5; ty = (e.clientY / window.innerHeight - .5) * .5; });
+        window.addEventListener('resize', () => { renderer.setSize(window.innerWidth, window.innerHeight); camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); });
+        let t = 0;
+        (function animate() {
+          requestAnimationFrame(animate); t += .002;
+          particles.rotation.y = t * .1 + tx * .5; particles.rotation.x = t * .05 + ty * .5;
+          const s = geo.attributes.size.array;
+          for (let i = 0; i < N; i++) s[i] = sz[i] * (1 + .3 * Math.sin(t * 3 + i * .01));
+          geo.attributes.size.needsUpdate = true;
+          renderer.render(scene, camera);
+        })();
+      })();
+    } catch (e) {
+      console.error('Three.js initialization failed:', e);
+    }
+
+    /* SCROLL REVEAL */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('visible');
+        e.target.querySelectorAll('.counter[data-target]').forEach(el => {
+          const target = parseInt(el.dataset.target);
+          let cur = 0; const step = target / 60;
+          const iv = setInterval(() => {
+            cur += step;
+            if (cur >= target) { cur = target; clearInterval(iv); }
+            el.textContent = Math.floor(cur) + (target === 99 ? '%' : '+');
+          }, 16);
+        });
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.timeline-item, .project-card, .stat-card, .cert-card').forEach(el => observer.observe(el));
+
+
+    /* ACTIVE NAV */
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      document.querySelectorAll('section[id]').forEach(s => { if (window.scrollY >= s.offsetTop - 200) cur = s.id; });
+      navLinks.forEach(a => {
+        if (a.getAttribute('href') === '#' + cur) {
+          a.style.background = 'var(--text)';
+          a.style.color = '#fff';
+          a.style.borderColor = 'var(--text)';
+        } else {
+          a.style.background = '';
+          a.style.color = '';
+          a.style.borderColor = '';
+        }
+      });
+    });
+
+    /* LIGHTBOX LOGIQUE */
+    (function () {
+      const lightbox = document.getElementById('lightbox-modal');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxCaption = document.getElementById('lightbox-caption');
+      const closeBtn = document.getElementById('lightbox-close');
+      const prevBtn = document.getElementById('lightbox-prev');
+      const nextBtn = document.getElementById('lightbox-next');
+
+      const projectImages = [
+        { src: 'images/project_recabeauty.png', title: 'ReCa Beauty & Style' },
+        { src: 'images/project_conftick.png', title: 'Billetterie Conférence 2026' },
+        { src: 'images/project_wildecor.png', title: 'Wildécor Event' },
+        { src: 'images/project_assounle.png', title: 'Assounlé Délices' },
+        { src: 'images/project_structura.png', title: 'Structura BTP' }
+      ];
+
+      let currentIndex = 0;
+
+      function openLightbox(index) {
+        currentIndex = index;
+        updateLightboxContent();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function updateLightboxContent() {
+        const project = projectImages[currentIndex];
+        lightboxImg.src = project.src;
+        lightboxImg.alt = project.title;
+        lightboxCaption.textContent = project.title;
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % projectImages.length;
+        updateLightboxContent();
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + projectImages.length) % projectImages.length;
+        updateLightboxContent();
+      }
+
+      // Event listeners
+      document.querySelectorAll('.btn-lightbox').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const index = parseInt(btn.getAttribute('data-index'));
+          openLightbox(index);
+        });
+      });
+
+      closeBtn.addEventListener('click', closeLightbox);
+      prevBtn.addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
+      nextBtn.addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') showNext();
+        if (e.key === 'ArrowLeft') showPrev();
+      });
+    })();
+  </script>
+
+  <!-- Theme Toggle Isolated Script -->
+  <script>
+    (function () {
+      const btn = document.getElementById('theme-toggle');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+        });
+      }
+    })();
+  </script>
+
+  <!-- LIGHTBOX MODAL -->
+  <div id="lightbox-modal" class="lightbox">
+    <button class="lightbox-close" id="lightbox-close">&times;</button>
+    <button class="lightbox-prev" id="lightbox-prev">&#10094;</button>
+    <button class="lightbox-next" id="lightbox-next">&#10095;</button>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="Project Preview">
+      <div class="lightbox-caption" id="lightbox-caption">Project Title</div>
+    </div>
+  </div>
+</body>
+
+</html>
