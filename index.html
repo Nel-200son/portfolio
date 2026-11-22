@@ -111,7 +111,7 @@
 
     @media (max-width: 767px) {
       .home-ui-scale {
-        zoom: var(--home-ui-scale);
+        zoom: 1;
       }
     }
 
@@ -613,10 +613,14 @@
     }
 
     @media (max-width: 767px) {
+      .lanyard {
+        touch-action: pan-y;
+      }
+
       .lanyard-card-container {
-        width: calc(100vw / var(--home-ui-scale, .9));
-        height: clamp(460px, 72svh, 680px);
-        margin: 0 calc(50% - 50vw) 12px;
+        width: 100%;
+        height: clamp(360px, 50svh, 460px);
+        margin: 0 0 8px;
         position: relative;
         inset: auto;
       }
@@ -836,7 +840,7 @@
     @media (max-width: 767px) {
       .hero-root-section {
         flex-direction: column;
-        padding: 80px 18px 48px;
+        padding: 68px 18px 48px;
       }
 
       .hero-text-col {
@@ -1160,6 +1164,18 @@
       }
     }
 
+    @property --lm-angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+
+    @keyframes liquidMetalSpin {
+      to {
+        --lm-angle: 360deg;
+      }
+    }
+
     /* LIQUID METAL BORDERS & EXPERIENCE / EDUCATION SECTION */
     .liquid-metal-border {
       z-index: 0;
@@ -1169,21 +1185,24 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
+      background: conic-gradient(
+        from var(--lm-angle, 0deg),
+        #fcf5f0 0deg,
+        #f97316 42deg,
+        #2b1208 95deg,
+        #ea580c 150deg,
+        #fcf5f0 205deg,
+        #2b1208 265deg,
+        #f97316 320deg,
+        #fcf5f0 360deg
+      );
+      animation: liquidMetalSpin 6s linear infinite;
       -webkit-mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
       mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
       -webkit-mask-clip: content-box, border-box;
       mask-clip: content-box, border-box;
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-    }
-
-    .liquid-metal-border canvas {
-      border-radius: inherit;
-      inset: 0;
-      width: 100% !important;
-      height: 100% !important;
-      display: block !important;
-      position: absolute !important;
     }
 
     .experience-section {
@@ -2263,6 +2282,16 @@
       padding: 16px 20px;
       display: flex;
       gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .contact-panel {
+        padding: 24px 18px;
+      }
+
+      .contact-email-card {
+        flex-wrap: wrap;
+      }
     }
 
     .contact-copy-btn {

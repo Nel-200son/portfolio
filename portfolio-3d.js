@@ -359,12 +359,23 @@ void main() {
       canvas.height = Math.round(viewH * dpr);
       ratio = canvas.width / viewW;
     }
+    let contextLost = false;
+    canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      contextLost = true;
+      canvas.style.display = 'none';
+    });
+    canvas.addEventListener('webglcontextrestored', () => {
+      contextLost = false;
+      canvas.style.display = 'block';
+    });
+
     window.addEventListener('resize', resize);
     resize();
 
     function render(now) {
       requestAnimationFrame(render);
-      if (document.hidden) return;
+      if (document.hidden || contextLost) return;
       const dt = lastT ? Math.min(0.05, Math.max(0.0005, (now - lastT) / 1000)) : 1 / 60;
       lastT = now;
       clock += dt * 0.01;
@@ -586,67 +597,7 @@ void main() {
     borders.forEach((el) => {
       if (el.dataset.initialized) return;
       el.dataset.initialized = 'true';
-      const canvas = document.createElement('canvas');
-      el.appendChild(canvas);
-      const gl = canvas.getContext('webgl2', { alpha: true, antialias: false });
-      if (!gl) return;
-      const progInfo = compileProgram(gl, LIQUID_VS, LIQUID_FS);
-      if (!progInfo) return;
-
-      const buf = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
-      const posLoc = gl.getAttribLocation(progInfo.program, 'a_position');
-      gl.enableVertexAttribArray(posLoc);
-      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-
-      let isVisible = false;
-      let frame = 0, lastT = performance.now();
-
-      const updateSize = () => {
-        const rect = el.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.max(1, Math.round(rect.width * dpr));
-        canvas.height = Math.max(1, Math.round(rect.height * dpr));
-      };
-      new ResizeObserver(updateSize).observe(el);
-      updateSize();
-
-      const loop = (now) => {
-        if (!isVisible || document.hidden) return;
-        requestAnimationFrame(loop);
-        const dt = now - lastT;
-        lastT = now;
-        frame += dt * 0.6;
-
-        gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.useProgram(progInfo.program);
-        const u = progInfo.uniforms;
-        gl.uniform1f(u.u_time, frame * 0.001);
-        gl.uniform2f(u.u_resolution, canvas.width, canvas.height);
-        gl.uniform1f(u.u_pixelRatio, Math.min(window.devicePixelRatio || 1, 2));
-        gl.uniform1f(u.u_repetition, 4.0);
-        gl.uniform1f(u.u_softness, 0.5);
-        gl.uniform1f(u.u_shiftRed, 0.3);
-        gl.uniform1f(u.u_shiftBlue, 0.3);
-        gl.uniform1f(u.u_distortion, 0.0);
-        gl.uniform1f(u.u_contour, 0.0);
-        gl.uniform1f(u.u_angle, 45.0);
-        gl.uniform1f(u.u_scale, 8.0);
-        gl.uniform1f(u.u_rotation, 0.0);
-        gl.uniform1f(u.u_offsetX, 0.1);
-        gl.uniform1f(u.u_offsetY, -0.1);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      };
-
-      new IntersectionObserver(([entry]) => {
-        isVisible = entry.isIntersecting;
-        if (isVisible) {
-          lastT = performance.now();
-          requestAnimationFrame(loop);
-        }
-      }).observe(el);
+      el.classList.add('is-liquid-ready');
     });
   }
   window.initLiquidMetalBorders = initLiquidMetalBorders;
@@ -832,7 +783,11 @@ if (foilStrength > 0.0) {
 
     let renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: isMobile ? 'default' : 'high-performance'
+      });
     } catch (e) {
       return;
     }
@@ -844,6 +799,9 @@ if (foilStrength > 0.0) {
     const canvas = renderer.domElement;
     canvas.className = 'lanyard-canvas';
     canvas.setAttribute('aria-hidden', 'true');
+    canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+    });
     container.appendChild(canvas);
 
     const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
